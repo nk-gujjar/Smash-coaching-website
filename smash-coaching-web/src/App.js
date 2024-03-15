@@ -6,8 +6,8 @@ import LoginAndSignup from './pages/LoginandSignup';
 function App() {
   return (
    <>
-     <Welcomepage/>
-     {/* <LoginAndSignup/> */}
+     {/* <Welcomepage/> */}
+     <LoginAndSignup/>
    </>
   );
 }

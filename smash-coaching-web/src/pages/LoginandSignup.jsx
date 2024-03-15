@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
+import './LoginandSignup.css';
 import login_img from '../Assets/login.webp';
 import signup_img from '../Assets/register.png';
-import './LoginandSignup.css';
 
-function LoginAndSignup() {
+const LoginForm = () => {
   const [isSignUpMode, setIsSignUpMode] = useState(false);
 
   const handleSignUpClick = () => {
@@ -18,7 +18,7 @@ function LoginAndSignup() {
     <div className={`container ${isSignUpMode ? 'sign-up-mode' : ''}`}>
       <div className="forms-container">
         <div className="signin-signup">
-          <form action="#" className="sign-in-form">
+          <form action="#" className={`sign-in-form ${isSignUpMode ? 'hidden' : ''}`}>
             <h2 className="title">Sign in</h2>
             <div className="input-field">
               <i className="fas fa-envelope"></i>
@@ -30,7 +30,7 @@ function LoginAndSignup() {
             </div>
             <input type="submit" value="Login" className="btn solid" method="post" />
           </form>
-          <form action="#" className="sign-up-form">
+          <form action="#" className={`sign-up-form ${isSignUpMode ? '' : 'hidden'}`}>
             <h2 className="title">Sign up</h2>
             <div className="input-field">
               <i className="fas fa-user"></i>
@@ -52,22 +52,23 @@ function LoginAndSignup() {
           </form>
         </div>
       </div>
+
       <div className="panels-container">
-        <div className="panel left-panel">
+        <div className={`panel left-panel ${isSignUpMode ? 'sign-up-mode' : ''}`}>
           <div className="content">
             <h3>New here ?</h3>
             <p>Register for Join the Best Online coaching</p>
-            <button className="btn transparent" onClick={handleSignUpClick}>
+            <button className="toggle-btn" onClick={handleSignUpClick}>
               Sign up
             </button>
           </div>
           <img src={login_img} className="image" alt="login image" />
         </div>
-        <div className="panel right-panel">
+        <div className={`panel right-panel ${isSignUpMode ? 'sign-up-mode' : ''}`}>
           <div className="content">
             <h3>One of us ?</h3>
             <p>Login for more details</p>
-            <button className="btn transparent" onClick={handleSignInClick}>
+            <button className="toggle-btn" onClick={handleSignInClick}>
               Sign in
             </button>
           </div>
@@ -76,6 +77,6 @@ function LoginAndSignup() {
       </div>
     </div>
   );
-}
+};
 
-export default LoginAndSignup;
+export default LoginForm;
