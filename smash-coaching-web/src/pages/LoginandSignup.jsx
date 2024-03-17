@@ -2,9 +2,24 @@ import React, { useState } from 'react';
 import './LoginandSignup.css';
 import login_img from '../Assets/login.webp';
 import signup_img from '../Assets/register.png';
+import { initializeApp } from 'firebase/app';
+import { getDatabase, ref, set } from 'firebase/database';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import firebaseConfig from '../Admin/Firebasekeys.js'; // Import your Firebase configuration
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation
+
+// Initialize Firebase app and Realtime Database instance
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app); // Get a reference to the database
+const auth = getAuth(app); // Get a reference to the authentication service
 
 const LoginForm = () => {
   const [isSignUpMode, setIsSignUpMode] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [password, setPassword] = useState('');
+  const navigation = useNavigation(); // Initialize useNavigation
 
   const handleSignUpClick = () => {
     setIsSignUpMode(true);
@@ -14,39 +29,81 @@ const LoginForm = () => {
     setIsSignUpMode(false);
   };
 
+  const handleSignUpSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Create user with email and password using Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      // Store user details in Firebase Realtime Database
+      await set(ref(database, `users/${user.uid}`), {
+        name,
+        email,
+        mobile,
+      });
+
+      console.log('User signed up and details stored:', user);
+      // You can perform further actions here like redirecting to another page, showing a success message, etc.
+    } catch (error) {
+      // Handle errors here
+      console.error('Sign up error:', error.code, error.message);
+      // You can display error messages to the user or handle them as needed
+    }
+  };
+
+  const handleSignInSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      // Sign in user with email and password using Firebase Auth
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      console.log('User signed in:', user);
+      // Redirect to Homepage after successful sign-in
+      navigation.navigate('Homepage');
+    } catch (error) {
+      // Handle errors here
+      console.error('Sign in error:', error.code, error.message);
+      // You can display error messages to the user or handle them as needed
+    }
+  };
+
   return (
     <div className={`container ${isSignUpMode ? 'sign-up-mode' : ''}`}>
       <div className="forms-container">
         <div className="signin-signup">
-          <form action="#" className={`sign-in-form ${isSignUpMode ? 'hidden' : ''}`}>
+          <form onSubmit={handleSignInSubmit} className={`sign-in-form ${isSignUpMode ? 'hidden' : ''}`}>
             <h2 className="title">Sign in</h2>
             <div className="input-field">
               <i className="fas fa-envelope"></i>
-              <input type="text" placeholder="Email" />
+              <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
             <div className="input-field">
               <i className="fas fa-lock"></i>
-              <input type="password" placeholder="Password" />
+              <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
             <input type="submit" value="Login" className="btn solid" method="post" />
           </form>
-          <form action="#" className={`sign-up-form ${isSignUpMode ? '' : 'hidden'}`}>
+          <form onSubmit={handleSignUpSubmit} className={`sign-up-form ${isSignUpMode ? '' : 'hidden'}`}>
             <h2 className="title">Sign up</h2>
             <div className="input-field">
               <i className="fas fa-user"></i>
-              <input type="text" placeholder="Name" />
+              <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
             </div>
             <div className="input-field">
               <i className="fas fa-envelope"></i>
-              <input type="email" placeholder="Email" />
+              <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
             <div className="input-field">
               <i className="fas fa-mobile"></i>
-              <input type="text" placeholder="Mobile" />
+              <input type="text" placeholder="Mobile" value={mobile} onChange={(e) => setMobile(e.target.value)} />
             </div>
             <div className="input-field">
               <i className="fas fa-lock"></i>
-              <input type="password" placeholder="Password" />
+              <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
             </div>
             <input type="submit" className="btn" value="Sign up" method="post" />
           </form>

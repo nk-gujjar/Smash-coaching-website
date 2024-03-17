@@ -5,16 +5,7 @@ import './Welcomepage.css';
 import { getAnalytics } from "firebase/analytics";
 import firebaseConfig from '../Admin/Firebasekeys';
 
-// Initialize Firebase (Replace with your actual Firebase config)
-// const firebaseConfig = {
-//   apiKey: "AIzaSyAFaFFOSUqKaIJLfpxyEd0oU9jJRQmAxqY",
-//   authDomain: "smash-coaching-website.firebaseapp.com",
-//   projectId: "smash-coaching-website",
-//   storageBucket: "smash-coaching-website.appspot.com",
-//   messagingSenderId: "532639568873",
-//   appId: "1:532639568873:web:bddd5527dd99911f80b178",
-//   measurementId: "G-MVKTS30KYF"
-// };
+
 
 // Initialize Firebase app and Realtime Database instance
 const app = initializeApp(firebaseConfig);
